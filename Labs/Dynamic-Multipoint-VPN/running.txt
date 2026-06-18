@@ -1,0 +1,248 @@
+! ============================================================
+! HUB ROUTER (R0) - BGP AS 65000
+! ============================================================
+!
+interface GigabitEthernet0/0
+ ip address 192.0.2.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+interface GigabitEthernet0/2
+ ip address 172.16.0.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+interface GigabitEthernet0/3
+ ip address 203.0.113.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+interface GigabitEthernet0/4
+ ip address 198.51.100.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+router bgp 65000
+ bgp log-neighbor-changes
+ neighbor 172.16.0.2 remote-as 65002
+ neighbor 172.16.0.2 default-originate
+ neighbor 192.0.2.2 remote-as 65001
+ neighbor 192.0.2.2 default-originate
+ neighbor 198.51.100.2 remote-as 65004
+ neighbor 198.51.100.2 default-originate
+ neighbor 203.0.113.2 remote-as 65003
+ neighbor 203.0.113.2 default-originate
+!
+!
+! ============================================================
+! SPOKE ROUTER R1 - BGP AS 65001 | EIGRP 100
+! ============================================================
+!
+hostname R1
+!
+crypto isakmp policy 10
+ encr aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key DMVPN-KEY address 0.0.0.0
+!
+crypto ipsec transform-set DMVPN-TS esp-aes 256 esp-sha256-hmac
+ mode tunnel
+!
+crypto ipsec profile DMVPN-PROFILE
+ set transform-set DMVPN-TS
+!
+interface Loopback0
+ ip address 1.1.1.1 255.255.255.255
+!
+interface Tunnel0
+ ip address 10.0.0.1 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ no ip split-horizon eigrp 100
+ ip nhrp authentication NHRPAUTH
+ ip nhrp map multicast dynamic
+ ip nhrp network-id 1
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/0
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile DMVPN-PROFILE
+!
+interface GigabitEthernet0/0
+ ip address 192.0.2.2 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+router eigrp 100
+ network 1.1.1.1 0.0.0.0
+ network 10.0.0.0 0.0.0.255
+!
+router bgp 65001
+ bgp log-neighbor-changes
+ neighbor 192.0.2.1 remote-as 65000
+!
+!
+! ============================================================
+! SPOKE ROUTER R2 - BGP AS 65002 | EIGRP 100
+! ============================================================
+!
+hostname R2
+!
+crypto isakmp policy 10
+ encr aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key DMVPN-KEY address 0.0.0.0
+!
+crypto ipsec transform-set DMVPN-TS esp-aes 256 esp-sha256-hmac
+ mode tunnel
+!
+crypto ipsec profile DMVPN-PROFILE
+ set transform-set DMVPN-TS
+!
+interface Loopback0
+ ip address 2.2.2.2 255.255.255.255
+!
+interface Tunnel0
+ ip address 10.0.0.2 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication NHRPAUTH
+ ip nhrp map 10.0.0.1 192.0.2.2
+ ip nhrp map multicast 192.0.2.2
+ ip nhrp network-id 1
+ ip nhrp nhs 10.0.0.1
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/2
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile DMVPN-PROFILE
+!
+interface GigabitEthernet0/2
+ ip address 172.16.0.2 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+!
+router eigrp 100
+ network 2.2.2.2 0.0.0.0
+ network 10.0.0.0 0.0.0.255
+!
+router bgp 65002
+ bgp log-neighbor-changes
+ neighbor 172.16.0.1 remote-as 65000
+ neighbor 203.0.113.1 remote-as 65000
+!
+!
+! ============================================================
+! SPOKE ROUTER R3 - BGP AS 65003 | EIGRP 100
+! ============================================================
+!
+hostname R3
+!
+crypto isakmp policy 10
+ encr aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key DMVPN-KEY address 0.0.0.0
+!
+crypto ipsec transform-set DMVPN-TS esp-aes 256 esp-sha256-hmac
+ mode tunnel
+!
+crypto ipsec profile DMVPN-PROFILE
+ set transform-set DMVPN-TS
+!
+interface Loopback0
+ ip address 3.3.3.3 255.255.255.255
+!
+interface Tunnel0
+ ip address 10.0.0.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication NHRPAUTH
+ ip nhrp map 10.0.0.1 192.0.2.2
+ ip nhrp map multicast 192.0.2.2
+ ip nhrp network-id 1
+ ip nhrp nhs 10.0.0.1
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/3
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile DMVPN-PROFILE
+!
+interface GigabitEthernet0/3
+ ip address 203.0.113.2 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+router eigrp 100
+ network 3.3.3.3 0.0.0.0
+ network 10.0.0.0 0.0.0.255
+!
+router bgp 65003
+ bgp log-neighbor-changes
+ neighbor 203.0.113.1 remote-as 65000
+!
+!
+! ============================================================
+! SPOKE ROUTER R4 - BGP AS 65004 | EIGRP 100
+! ============================================================
+!
+hostname R4
+!
+crypto isakmp policy 10
+ encr aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key DMVPN-KEY address 0.0.0.0
+!
+crypto ipsec transform-set DMVPN-TS esp-aes 256 esp-sha256-hmac
+ mode tunnel
+!
+crypto ipsec profile DMVPN-PROFILE
+ set transform-set DMVPN-TS
+!
+interface Loopback0
+ ip address 4.4.4.4 255.255.255.255
+!
+interface Tunnel0
+ ip address 10.0.0.4 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication NHRPAUTH
+ ip nhrp map 10.0.0.1 192.0.2.2
+ ip nhrp map multicast 192.0.2.2
+ ip nhrp network-id 1
+ ip nhrp nhs 10.0.0.1
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/4
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile DMVPN-PROFILE
+!
+interface GigabitEthernet0/4
+ ip address 198.51.100.2 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+router eigrp 100
+ network 4.4.4.4 0.0.0.0
+ network 10.0.0.0 0.0.0.255
+!
+router bgp 65004
+ bgp log-neighbor-changes
+ neighbor 172.16.0.1 remote-as 65000
+ neighbor 198.51.100.1 remote-as 65000
+!

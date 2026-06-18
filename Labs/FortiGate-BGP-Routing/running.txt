@@ -1,0 +1,179 @@
+# ==============================================================================
+# DEPLOYMENT MODULE: MULTI-DOMAIN eBGP ROUTING OVER FORTIOS
+# ARCHITECTURE TARGET: FW1 (CENTRAL HUB SITE - AS 65001)
+# ==============================================================================
+
+# Phase 1 & 2: Interface IP Addressing & Management Security
+config system interface
+    edit "port2"
+        set alias WAN
+        set ip 100.64.0.1 255.255.255.0
+        set allowaccess ping https ssh
+    next
+    edit "port3"
+        set alias LAN
+        set ip 172.16.1.1 255.255.255.0
+        set allowaccess ping
+    next
+end
+
+# Phase 2: Forwarding Plane Security Policies (Bi-directional State)
+config firewall policy
+    edit 1
+        set name "LAN to WAN"
+        set srcintf "port3"
+        set dstintf "port2"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+    edit 2
+        set name "WAN to LAN"
+        set srcintf "port2"
+        set dstintf "port3"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+end
+
+# Phase 3: eBGP Engine Peering & Network Advertisements
+config router bgp
+    set as 65001
+    set router-id 1.1.1.1
+    config neighbor
+        edit "100.64.0.2"
+            set remote-as 65002
+        next
+        edit "100.64.0.3"
+            set remote-as 65003
+        next
+    end
+    config network
+        edit 1
+            set prefix 172.16.1.0 255.255.255.0
+        next
+    end
+end
+
+
+# ==============================================================================
+# ARCHITECTURE TARGET: FW2 (SPOKE SITE A - AS 65002)
+# ==============================================================================
+
+# Phase 1 & 2: Interface IP Addressing & Management Security
+config system interface
+    edit "port2"
+        set alias WAN
+        set ip 100.64.0.2 255.255.255.0
+        set allowaccess ping https ssh
+    next
+    edit "port3"
+        set alias LAN
+        set ip 172.16.2.1 255.255.255.0
+        set allowaccess ping
+    next
+end
+
+# Phase 2: Forwarding Plane Security Policies (Bi-directional State)
+config firewall policy
+    edit 1
+        set name "LAN to WAN"
+        set srcintf "port3"
+        set dstintf "port2"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+    edit 2
+        set name "WAN to LAN"
+        set srcintf "port2"
+        set dstintf "port3"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+end
+
+# Phase 3: eBGP Engine Peering & Network Advertisements
+config router bgp
+    set as 65002
+    set router-id 2.2.2.2
+    config neighbor
+        edit "100.64.0.1"
+            set remote-as 65001
+        next
+    end
+    config network
+        edit 1
+            set prefix 172.16.2.0 255.255.255.0
+        next
+    end
+end
+
+
+# ==============================================================================
+# ARCHITECTURE TARGET: FW3 (SPOKE SITE B - AS 65003)
+# ==============================================================================
+
+# Phase 1 & 2: Interface IP Addressing & Management Security
+config system interface
+    edit "port2"
+        set alias WAN
+        set ip 100.64.0.3 255.255.255.0
+        set allowaccess ping https ssh
+    next
+    edit "port3"
+        set alias LAN
+        set ip 172.16.3.1 255.255.255.0
+        set allowaccess ping
+    next
+end
+
+# Phase 2: Forwarding Plane Security Policies (Bi-directional State)
+config firewall policy
+    edit 1
+        set name "LAN to WAN"
+        set srcintf "port3"
+        set dstintf "port2"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+    edit 2
+        set name "WAN to LAN"
+        set srcintf "port2"
+        set dstintf "port3"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+end
+
+# Phase 3: eBGP Engine Peering & Network Advertisements
+config router bgp
+    set as 65003
+    set router-id 3.3.3.3
+    config neighbor
+        edit "100.64.0.1"
+            set remote-as 65001
+        next
+    end
+    config network
+        edit 1
+            set prefix 172.16.3.0 255.255.255.0
+        next
+    end
+end

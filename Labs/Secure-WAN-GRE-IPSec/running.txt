@@ -1,0 +1,136 @@
+! =======================================================
+! DEPLOYMENT MODULE: SECURE WAN (GRE over IPsec with NAT)
+! ARCHITECTURE TARGET: R1 (ISP CORE)
+! =======================================================
+
+hostname R1
+!
+interface GigabitEthernet0/1
+ ip address 10.10.10.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+interface GigabitEthernet0/2
+ ip address 10.10.10.5 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+!
+router ospf 1
+ network 10.10.10.0 0.0.0.7 area 0
+!
+
+! =======================================================
+! ARCHITECTURE TARGET: R2 (HQ EDGE)
+! =======================================================
+
+hostname R2
+!
+crypto isakmp policy 10
+ encr aes
+ hash md5
+ authentication pre-share
+ group 2
+ crypto isakmp key cisco address 0.0.0.0
+!
+crypto ipsec transform-set SET1 esp-aes esp-sha-hmac
+ mode tunnel
+!
+crypto ipsec profile GREIPSEC
+ set transform-set SET1
+!
+interface Tunnel0
+ ip address 192.168.0.1 255.255.255.0
+ tunnel source GigabitEthernet0/1
+ tunnel destination 10.10.10.6
+ tunnel protection ipsec profile GREIPSEC
+!
+interface GigabitEthernet0/0
+ ip address 20.20.20.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ duplex full
+ speed 1000
+ media-type rj45
+!
+interface GigabitEthernet0/1
+ ip address 10.10.10.2 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ duplex full
+ speed 1000
+ media-type rj45
+!
+router eigrp 100
+ network 20.0.0.0
+ network 192.168.0.0
+ passive-interface GigabitEthernet0/0
+!
+router ospf 1
+ network 10.10.10.0 0.0.0.3 area 0
+!
+ip nat inside source list NAT_ACL interface GigabitEthernet0/1 overload
+!
+ip access-list extended NAT_ACL
+ deny ip 20.20.20.0 0.0.0.255 30.30.30.0 0.0.0.255
+ permit ip 20.20.20.0 0.0.0.255 any
+!
+
+! =======================================================
+! ARCHITECTURE TARGET: R3 (BRANCH EDGE)
+! =======================================================
+
+version 15.6
+service timestamps debug datetime msec
+hostname R3
+!
+crypto isakmp policy 10
+ encr aes
+ hash md5
+ authentication pre-share
+ group 2
+ crypto isakmp key cisco address 0.0.0.0
+!
+crypto ipsec transform-set SET1 esp-aes esp-sha-hmac
+ mode tunnel
+!
+crypto ipsec profile GREIPSEC
+ set transform-set SET1
+!
+interface Tunnel0
+ ip address 192.168.0.2 255.255.255.0
+ tunnel source GigabitEthernet0/2
+ tunnel destination 10.10.10.2
+ tunnel protection ipsec profile GREIPSEC
+!
+interface GigabitEthernet0/0
+ ip address 30.30.30.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ duplex full
+ speed 1000
+ media-type rj45
+!
+interface GigabitEthernet0/2
+ ip address 10.10.10.6 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ duplex full
+ speed 1000
+ media-type rj45
+!
+router eigrp 100
+ network 30.0.0.0
+ network 192.168.0.0
+ passive-interface GigabitEthernet0/0
+!
+router ospf 1
+ network 10.10.10.4 0.0.0.3 area 0
+!
+ip nat inside source list NAT_ACL interface GigabitEthernet0/2 overload
+!
+ip access-list extended NAT_ACL
+ deny ip 30.30.30.0 0.0.0.255 20.20.20.0 0.0.0.255
+ permit ip 30.30.30.0 0.0.0.255 any
+!
