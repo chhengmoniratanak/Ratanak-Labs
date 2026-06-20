@@ -15,5 +15,13 @@
 <details>
 <summary><strong>Udemy</strong></summary>
   
-* **Advanced BGP Routing Concepts** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* **Network Security & Firewalls Masterclass** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* * **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* * **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+
+
