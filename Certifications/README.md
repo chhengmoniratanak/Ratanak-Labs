@@ -15,13 +15,13 @@
 <details>
 <summary><strong>Udemy</strong></summary>
   
-* **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* * **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* * **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
-* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](./Certifications/Skills-&_Courses/...)
+* **Cisco BGP Masterclass for Enterprise Network Engineers** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/Cisco BGP Masterclass for Enterprise Network Engineers.pdf>)
+* **Cisco CCNA 200-301 - The Complete Guide to Getting Certified** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/Cisco CCNA 200-301 - The Complete Guide to Getting Certified.pdf>)
+* **Cisco Cisco Multicast Networking Masterclass** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/Cisco Multicast Networking Masterclass.pdf>)
+* **Cisco ENCOR_v1.1** (Udemy) - [Certificate](./Skills-&_Courses/Udemy/ENCOR_v1.1.pdf)
+* **FortiGate Firewall NSE4 Version 7 Training part 1** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/FortiGate Firewall NSE4 Version 7 Training part 1.pdf>)
+* **MikroTik Network Associate with LABS (RouterOS 7 & Winbox 4)** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/MikroTik Network Associate with LABS (RouterOS 7 & Winbox 4)>)
+* **Windows Server 2019 Administration** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/Windows Server 2019 Administration.pdf>)
+
 
 
