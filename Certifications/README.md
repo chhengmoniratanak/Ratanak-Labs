@@ -20,7 +20,7 @@
 * **Cisco Cisco Multicast Networking Masterclass** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/Cisco Multicast Networking Masterclass.pdf>)
 * **Cisco ENCOR_v1.1** (Udemy) - [Certificate](./Skills-&_Courses/Udemy/ENCOR_v1.1.pdf)
 * **FortiGate Firewall NSE4 Version 7 Training part 1** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/FortiGate Firewall NSE4 Version 7 Training part 1.pdf>)
-* **MikroTik Network Associate with LABS (RouterOS 7 & Winbox 4)** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/MikroTik Network Associate with LABS (RouterOS 7 & Winbox 4)>)
+* **MikroTik Network Associate with LABS (RouterOS 7 & Winbox 4)** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/MikroTik Network Associate with LABS (RouterOS 7 & Winbox 4).pdf>)
 * **Windows Server 2019 Administration** (Udemy) - [Certificate](<./Skills-&_Courses/Udemy/Windows Server 2019 Administration.pdf>)
 
 
