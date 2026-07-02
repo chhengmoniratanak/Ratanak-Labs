@@ -5,7 +5,7 @@ Short paragraph: two PA firewalls, HA active/passive, tested failover
 via [method], validated stateful session sync / GARP behavior.
 
 ## Topology
-[Topology Diagram](Projects/High-Availability-Palo/images/topology.png)
+[Topology Diagram](/High-Availability-Palo/images/topology.png)
 
 ## Key config
 - Group ID, Priority, HA1/HA2 setup (bullet points, not screenshots —
