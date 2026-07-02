@@ -6,7 +6,7 @@ Welcome to my personal engineering space. Originally built as a documentation hu
 
 This repository is organized into three main functional areas:
 
-### 📁 `Labs/`
+### 📁 `Projects/`
 My core engineering space for building and testing multi-vendor networks. To push past physical hardware constraints, these environments are deployed using cloud-hosted EVE-NG. 
 * **Topology Files:** Live EVE-NG `.unl` project files to export and inspect the control plane.
 * **Configurations:** Production-ready, sanitized running configurations organized by device role.
