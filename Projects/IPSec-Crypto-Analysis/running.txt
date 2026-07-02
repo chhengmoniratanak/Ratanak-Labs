@@ -1,0 +1,122 @@
+! ============================================================
+! R1 - BGP AS 65001
+! ============================================================
+!
+crypto isakmp policy 1
+ encr aes
+ authentication pre-share
+ group 2
+!
+crypto isakmp key CISCO address 100.64.2.1
+crypto isakmp key CISCO address 100.64.3.1
+!
+crypto ipsec transform-set R2-AH ah-sha-hmac
+ mode tunnel
+!
+crypto ipsec transform-set R3-ESP esp-aes esp-sha-hmac
+ mode tunnel
+!
+crypto map MYMAP 10 ipsec-isakmp
+ set peer 100.64.2.1
+ set transform-set R2-AH
+ match address TO-R2
+!
+crypto map MYMAP 20 ipsec-isakmp
+ set peer 100.64.3.1
+ set transform-set R3-ESP
+ match address TO-R3
+!
+interface Loopback0
+ ip address 192.168.1.1 255.255.255.0
+!
+interface GigabitEthernet0/0
+ ip address 100.64.1.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+ crypto map MYMAP
+!
+router bgp 65001
+ bgp log-neighbor-changes
+ neighbor 100.64.1.2 remote-as 65000
+!
+ip access-list extended TO-R2
+ permit ip 192.168.1.0 0.0.0.255 192.168.2.0 0.0.0.255
+!
+ip access-list extended TO-R3
+ permit ip 192.168.1.0 0.0.0.255 192.168.3.0 0.0.0.255
+!
+!
+! ============================================================
+! R2 - BGP AS 65002
+! ============================================================
+!
+crypto isakmp policy 1
+ encr aes
+ authentication pre-share
+ group 2
+!
+crypto isakmp key CISCO address 100.64.1.1
+!
+crypto ipsec transform-set R2-AH ah-sha-hmac
+ mode tunnel
+!
+crypto map MYMAP 10 ipsec-isakmp
+ set peer 100.64.1.1
+ set transform-set R2-AH
+ match address TO-R1
+!
+interface Loopback0
+ ip address 192.168.2.1 255.255.255.0
+!
+interface GigabitEthernet0/0
+ ip address 100.64.2.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+ crypto map MYMAP
+!
+router bgp 65002
+ bgp log-neighbor-changes
+ neighbor 100.64.2.2 remote-as 65000
+!
+ip access-list extended TO-R1
+ permit ip 192.168.2.0 0.0.0.255 192.168.1.0 0.0.0.255
+!
+!
+! ============================================================
+! R3 - BGP AS 65003
+! ============================================================
+!
+crypto isakmp policy 1
+ encr aes
+ authentication pre-share
+ group 2
+!
+crypto isakmp key CISCO address 100.64.1.1
+!
+crypto ipsec transform-set R3-ESP esp-aes esp-sha-hmac
+ mode tunnel
+!
+crypto map MYMAP 10 ipsec-isakmp
+ set peer 100.64.1.1
+ set transform-set R3-ESP
+ match address TO-R1
+!
+interface Loopback0
+ ip address 192.168.3.1 255.255.255.0
+!
+interface GigabitEthernet0/0
+ ip address 100.64.3.1 255.255.255.252
+ duplex full
+ speed 1000
+ media-type rj45
+ crypto map MYMAP
+!
+router bgp 65003
+ bgp log-neighbor-changes
+ neighbor 100.64.3.2 remote-as 65000
+!
+ip access-list extended TO-R1
+ permit ip 192.168.3.0 0.0.0.255 192.168.1.0 0.0.0.255
+!

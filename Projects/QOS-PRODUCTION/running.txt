@@ -1,0 +1,96 @@
+HQ-EDGE, CAT8000
+==============================================
+configure terminal
+!
+hostname HQ-EDGE
+!
+class-map match-any CM_VIDEO
+ match access-group name ACL_VIDEO_CONFERENCE
+class-map match-any CM_WAN_VOICE
+ match dscp ef
+class-map match-any CM_VOICE
+ match access-group name ACL_VOICE_RTP
+class-map match-any CM_WAN_VIDEO
+ match dscp af41
+class-map match-any CM_SCAVENGER
+ match protocol bittorrent
+ match protocol youtube
+class-map match-any CM_CRITICAL
+ match protocol http
+ match protocol https
+class-map match-any CM_WAN_CRITICAL
+ match dscp af21
+!
+policy-map QUEUE-EGRESS
+ class CM_WAN_VOICE
+  priority percent 10
+ class CM_WAN_VIDEO
+  bandwidth percent 20
+ class CM_WAN_CRITICAL
+  bandwidth percent 30
+  random-detect dscp-based
+ class class-default
+  fair-queue
+policy-map SHAPE-10MBPS-PARENT
+ class class-default
+  shape average 10000000
+   service-policy QUEUE-EGRESS
+policy-map MARKING-INGRESS
+ class CM_VIDEO
+  set dscp af41
+ class CM_VOICE
+  set dscp ef
+ class CM_CRITICAL
+  set dscp af21
+ class CM_SCAVENGER
+  set dscp cs1
+  police 128000 conform-action transmit  exceed-action drop
+ class class-default
+  set dscp default
+!
+!
+interface GigabitEthernet1
+ ip address 10.1.1.1 255.255.255.0
+ ip nbar protocol-discovery
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ no shutdown
+ service-policy input MARKING-INGRESS
+!
+interface GigabitEthernet2
+ ip address 192.168.12.1 255.255.255.252
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ no shutdown
+ service-policy output SHAPE-10MBPS-PARENT
+!
+!
+ip route 8.8.8.8 255.255.255.255 GigabitEthernet2 192.168.12.2
+!
+ip access-list extended ACL_VIDEO_CONFERENCE
+ 10 permit ip host 10.1.1.2 any
+ip access-list extended ACL_VOICE_RTP
+ 10 permit udp any any range 16384 32767
+!
+!
+==============================================
+
+
+HQ-CORE, IOL
+==============================================
+configure terminal
+!
+hostname HQ-CORE
+!
+ ip address 10.1.1.2 255.255.255.0
+ no shutdown
+ duplex auto
+!
+!
+ip route 0.0.0.0 0.0.0.0 10.1.1.1
+!
+!
+==============================================
+
