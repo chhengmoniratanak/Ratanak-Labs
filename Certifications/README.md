@@ -8,7 +8,7 @@
 <details>
 <summary><strong>CBT Nuggets</strong></summary>
 
-* **Cisco CCNP Enterprise Core (350-401 ENCOR) v1.2** (Udemy) - [Certificate](<./Certifications/Skills-&_Courses/CBT Nuggets/Moniratanak Chheng-Cisco CCNP Enterprise Core (350-401 ENCOR) v1.2 (1).pdf>)
+* **Cisco CCNP Enterprise Core (350-401 ENCOR) v1.2** (Udemy) - [Certificate](<./Skills-&_Courses/CBT Nuggets/Moniratanak Chheng-Cisco CCNP Enterprise Core (350-401 ENCOR) v1.2 (1).pdf>)
 
 </details>
 
