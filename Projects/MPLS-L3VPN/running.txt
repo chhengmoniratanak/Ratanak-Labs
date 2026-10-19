@@ -1,0 +1,202 @@
+! =====================================================================
+! R1-PE CONFIGURATION
+! =====================================================================
+enable
+configure terminal
+hostname R1-PE
+no ip domain-lookup
+
+vrf definition CUST_1
+ rd 1:1
+ route-target export 1:1
+ route-target import 1:1
+ address-family ipv4
+ exit-address-family
+
+vrf definition CUST_2
+ rd 2:2
+ route-target export 2:2
+ route-target import 2:2
+ address-family ipv4
+ exit-address-family
+
+mpls ip
+mpls label protocol ldp
+
+interface Loopback0
+ ip address 1.1.1.1 255.255.255.255
+
+interface GigabitEthernet0/0
+ ip address 10.12.0.1 255.255.255.0
+ mpls ip
+ no shutdown
+
+interface GigabitEthernet1/0
+ vrf forwarding CUST_1
+ ip address 172.16.1.254 255.255.255.0
+ no shutdown
+
+interface GigabitEthernet2/0
+ vrf forwarding CUST_2
+ ip address 172.16.2.254 255.255.255.0
+ no shutdown
+
+router ospf 1
+ router-id 1.1.1.1
+ network 1.1.1.1 0.0.0.0 area 0
+ network 10.12.0.0 0.0.0.255 area 0
+
+router bgp 65000
+ bgp router-id 1.1.1.1
+ no bgp default ipv4-unicast
+ neighbor 4.4.4.4 remote-as 65000
+ neighbor 4.4.4.4 update-source Loopback0
+ address-family vpnv4
+  neighbor 4.4.4.4 activate
+  neighbor 4.4.4.4 send-community extended
+ exit-address-family
+ address-family ipv4 vrf CUST_1
+  neighbor 172.16.1.11 remote-as 65001
+  neighbor 172.16.1.11 activate
+ exit-address-family
+ address-family ipv4 vrf CUST_2
+  neighbor 172.16.2.22 remote-as 65002
+  neighbor 172.16.2.22 activate
+ exit-address-family
+end
+write memory
+
+
+! =====================================================================
+! R2-P CONFIGURATION
+! =====================================================================
+enable
+configure terminal
+hostname R2-P
+no ip domain-lookup
+
+mpls ip
+mpls label protocol ldp
+
+interface Loopback0
+ ip address 2.2.2.2 255.255.255.255
+
+interface GigabitEthernet0/0
+ ip address 10.12.0.2 255.255.255.0
+ mpls ip
+ no shutdown
+
+interface GigabitEthernet1/0
+ ip address 10.23.0.2 255.255.255.0
+ mpls ip
+ no shutdown
+
+router ospf 1
+ router-id 2.2.2.2
+ network 2.2.2.2 0.0.0.0 area 0
+ network 10.12.0.0 0.0.0.255 area 0
+ network 10.23.0.0 0.0.0.255 area 0
+end
+write memory
+
+
+! =====================================================================
+! R3-P CONFIGURATION
+! =====================================================================
+enable
+configure terminal
+hostname R3-P
+no ip domain-lookup
+
+mpls ip
+mpls label protocol ldp
+
+interface Loopback0
+ ip address 3.3.3.3 255.255.255.255
+
+interface GigabitEthernet1/0
+ ip address 10.23.0.3 255.255.255.0
+ mpls ip
+ no shutdown
+
+interface GigabitEthernet0/0
+ ip address 10.34.0.3 255.255.255.0
+ mpls ip
+ no shutdown
+
+router ospf 1
+ router-id 3.3.3.3
+ network 3.3.3.3 0.0.0.0 area 0
+ network 10.23.0.0 0.0.0.255 area 0
+ network 10.34.0.0 0.0.0.255 area 0
+end
+write memory
+
+
+! =====================================================================
+! R4-PE CONFIGURATION
+! =====================================================================
+enable
+configure terminal
+hostname R4-PE
+no ip domain-lookup
+
+vrf definition CUST_1
+ rd 1:1
+ route-target export 1:1
+ route-target import 1:1
+ address-family ipv4
+ exit-address-family
+
+vrf definition CUST_2
+ rd 2:2
+ route-target export 2:2
+ route-target import 2:2
+ address-family ipv4
+ exit-address-family
+
+mpls ip
+mpls label protocol ldp
+
+interface Loopback0
+ ip address 4.4.4.4 255.255.255.255
+
+interface GigabitEthernet0/0
+ ip address 10.34.0.4 255.255.255.0
+ mpls ip
+ no shutdown
+
+interface GigabitEthernet1/0
+ vrf forwarding CUST_1
+ ip address 172.16.3.254 255.255.255.0
+ no shutdown
+
+interface GigabitEthernet2/0
+ vrf forwarding CUST_2
+ ip address 172.16.4.254 255.255.255.0
+ no shutdown
+
+router ospf 1
+ router-id 4.4.4.4
+ network 4.4.4.4 0.0.0.0 area 0
+ network 10.34.0.0 0.0.0.255 area 0
+
+router bgp 65000
+ bgp router-id 4.4.4.4
+ no bgp default ipv4-unicast
+ neighbor 1.1.1.1 remote-as 65000
+ neighbor 1.1.1.1 update-source Loopback0
+ address-family vpnv4
+  neighbor 1.1.1.1 activate
+  neighbor 1.1.1.1 send-community extended
+ exit-address-family
+ address-family ipv4 vrf CUST_1
+  neighbor 172.16.3.33 remote-as 65003
+  neighbor 172.16.3.33 activate
+ exit-address-family
+ address-family ipv4 vrf CUST_2
+  neighbor 172.16.4.44 remote-as 65004
+  neighbor 172.16.4.44 activate
+ exit-address-family
+end
+write memory
