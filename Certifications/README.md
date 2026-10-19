@@ -9,6 +9,7 @@
 <summary><strong>CBT Nuggets</strong></summary>
 
 * **Cisco CCNP Enterprise Core (350-401 ENCOR) v1.2** (Udemy) - [Certificate](<./Skills-&_Courses/CBT Nuggets/Moniratanak Chheng-Cisco CCNP Enterprise Core (350-401 ENCOR) v1.2 (1).pdf>)
+* **BIG-IP Administration Install, Initial Configuration, and Upgrade (F5CAB1)** (Udemy) - [Certificate](<./Skills-&_Courses/CBT Nuggets/Moniratanak Chheng-BIG-IP Administration Install, Initial Configuration, and Upgrade (F5CAB1) (2).pdf>)
 
 </details>
 
