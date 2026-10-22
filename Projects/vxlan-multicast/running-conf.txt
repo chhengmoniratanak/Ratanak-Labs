@@ -1,0 +1,145 @@
+! =====================================================================
+! DEVICE 1: CSR1 (Spine / PIM RP)
+! =====================================================================
+
+ip multicast-routing distributed
+ip pim rp-address 10.1.1.100
+
+interface Loopback0
+ ip address 10.1.1.100 255.255.255.255
+ ip pim sparse-mode
+ ip ospf 1 area 0
+
+interface GigabitEthernet1
+ ip address 10.0.0.1 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+ no shutdown
+
+interface GigabitEthernet2
+ ip address 10.0.0.5 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+ no shutdown
+
+router ospf 1
+
+
+! =====================================================================
+! DEVICE 2: 9K1 (Leaf 1 VTEP)
+! =====================================================================
+
+hostname 9K1
+
+feature ospf
+feature pim
+feature interface-vlan
+feature vn-segment-vlan-based
+feature nv overlay
+
+hardware access-list tcam region racl 512
+hardware access-list tcam region arp-ether 256 double-wide
+
+ip pim rp-address 10.1.1.100 group-list 224.0.0.0/4
+
+vlan 10,20
+vlan 10
+  vn-segment 100000
+vlan 20
+  vn-segment 200000
+
+interface Vlan10
+  no shutdown
+  ip address 10.10.10.1/24
+
+interface Vlan20
+  no shutdown
+  ip address 10.20.20.1/24
+
+interface nve1
+  no shutdown
+  source-interface loopback0
+  member vni 100000
+    mcast-group 239.1.1.1
+  member vni 200000
+    mcast-group 239.1.1.2
+
+interface Ethernet1/1
+  no switchport
+  ip address 10.0.0.2/30
+  ip router ospf 1 area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/2
+  switchport access vlan 10
+
+interface Ethernet1/3
+  switchport access vlan 20
+
+interface loopback0
+  ip address 10.1.1.1/32
+  ip router ospf 1 area 0.0.0.0
+  ip pim sparse-mode
+
+router ospf 1
+
+
+! =====================================================================
+! DEVICE 3: 9K-2 (Leaf 2 VTEP)
+! =====================================================================
+
+hostname 9K-2
+
+feature ospf
+feature pim
+feature interface-vlan
+feature vn-segment-vlan-based
+feature nv overlay
+
+hardware access-list tcam region racl 512
+hardware access-list tcam region arp-ether 256 double-wide
+
+ip pim rp-address 10.1.1.100 group-list 224.0.0.0/4
+
+vlan 10,20
+vlan 10
+  vn-segment 100000
+vlan 20
+  vn-segment 200000
+
+interface Vlan10
+  no shutdown
+  ip address 10.10.10.1/24
+
+interface Vlan20
+  no shutdown
+  ip address 10.20.20.1/24
+
+interface nve1
+  no shutdown
+  source-interface loopback0
+  member vni 100000
+    mcast-group 239.1.1.1
+  member vni 200000
+    mcast-group 239.1.1.2
+
+interface Ethernet1/1
+  no switchport
+  ip address 10.0.0.6/30
+  ip router ospf 1 area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/2
+  switchport access vlan 10
+
+interface Ethernet1/3
+  switchport access vlan 20
+
+interface loopback0
+  ip address 10.1.1.2/32
+  ip router ospf 1 area 0.0.0.0
+  ip pim sparse-mode
+
+router ospf 1
