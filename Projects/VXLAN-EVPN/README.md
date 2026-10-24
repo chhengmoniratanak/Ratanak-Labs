@@ -26,8 +26,7 @@ The network follows a classic spine-leaf design consisting of a centralized core
 ```text
 bgp-evpn-vxlan-fabric/
 ├── README.md               # Project overview and documentation
-├── topology/
-│   └── architecture.png    # EVE-NG network topology diagram[cite: 1]
+├── BGP_EVPN_VXLAN_Project_Doc.pdf
 └── configs/
     ├── vxlan.txt            # Core/Spine running configuration
     ├── evpn.txt            # Leaf 1 running configuration
