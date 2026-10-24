@@ -29,9 +29,9 @@ bgp-evpn-vxlan-fabric/
 ├── topology/
 │   └── architecture.png    # EVE-NG network topology diagram[cite: 1]
 └── configs/
-    ├── CS1.cfg             # Core/Spine running configuration
-    ├── 9K1.cfg             # Leaf 1 running configuration
-    └── 9K-2.cfg            # Leaf 2 running configuration
+    ├── vxlan.txt            # Core/Spine running configuration
+    ├── evpn.txt            # Leaf 1 running configuration
+    └── l3vni.txt           # Leaf 2 running configuration
 
 ```
 
