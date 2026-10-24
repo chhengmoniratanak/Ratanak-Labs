@@ -1,0 +1,92 @@
+! =====================================================================
+! SECTION 1: VXLAN UNDERLAY & TRANSPORT CONFIGURATIONS
+! Topology: Spine-Leaf Architecture (EVE-NG)
+! =====================================================================
+
+
+! =====================================================================
+! DEVICE: CS1 (Core / Spine Router - CSR1000v)
+! =====================================================================
+
+interface Loopback0
+ ip address 10.1.1.100 255.255.255.255
+ ip ospf 1 area 0
+!
+interface GigabitEthernet1
+ ip address 10.0.0.1 255.255.255.252
+ ip ospf 1 area 0
+ negotiation auto
+!
+interface GigabitEthernet2
+ ip address 10.0.0.5 255.255.255.252
+ ip ospf 1 area 0
+ negotiation auto
+!
+router ospf 1
+!
+
+
+! =====================================================================
+! DEVICE: 9K1 (Leaf 1 - Cisco Nexus 9000v)
+! =====================================================================
+
+feature ospf
+feature interface-vlan
+feature vn-segment-vlan-based
+feature nv overlay
+!
+interface loopback0
+ ip address 10.1.1.1/32
+ ip router ospf 1 area 0.0.0.0
+!
+interface Ethernet1/1
+ no switchport
+ ip address 10.0.0.2/30
+ ip router ospf 1 area 0.0.0.0
+ no shutdown
+!
+interface nve1
+ no shutdown
+ host-reachability protocol bgp
+ source-interface loopback0
+ member vni 100000
+   suppress-arp
+   ingress-replication protocol bgp
+ member vni 200000
+   suppress-arp
+   ingress-replication protocol bgp
+ member vni 333333 associate-vrf
+!
+
+
+! =====================================================================
+! DEVICE: 9K-2 (Leaf 2 - Cisco Nexus 9000v)
+! =====================================================================
+
+feature ospf
+feature interface-vlan
+feature vn-segment-vlan-based
+feature nv overlay
+!
+interface loopback0
+ ip address 10.1.1.2/32
+ ip router ospf 1 area 0.0.0.0
+!
+interface Ethernet1/1
+ no switchport
+ ip address 10.0.0.6/30
+ ip router ospf 1 area 0.0.0.0
+ no shutdown
+!
+interface nve1
+ no shutdown
+ host-reachability protocol bgp
+ source-interface loopback0
+ member vni 100000
+   suppress-arp
+   ingress-replication protocol bgp
+ member vni 200000
+   suppress-arp
+   ingress-replication protocol bgp
+ member vni 333333 associate-vrf
+!

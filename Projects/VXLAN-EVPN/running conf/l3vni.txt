@@ -1,0 +1,57 @@
+! =====================================================================
+! SECTION 3: L3VNI, ANYCAST GATEWAYS & VRF CONFIGURATIONS
+! Applied identically on Leaf 1 (9K1) and Leaf 2 (9K-2)
+! =====================================================================
+
+
+! =====================================================================
+! DEVICES: 9K1 & 9K-2 (Leaf Switches)
+! =====================================================================
+
+fabric forwarding anycast-gateway-mac 000a.000a.000a
+!
+vlan 10,20,333
+vlan 10
+ vn-segment 100000
+vlan 20
+ vn-segment 200000
+vlan 333
+ vn-segment 333333
+!
+route-map PERMIT_ALL permit 10
+!
+vrf context CBT
+ vni 333333
+ rd auto
+ address-family ipv4 unicast
+   route-target both auto
+   route-target both auto evpn
+!
+interface Vlan10
+ no shutdown
+ vrf member CBT
+ ip address 10.10.10.1/24
+ fabric forwarding mode anycast-gateway
+!
+interface Vlan20
+ no shutdown
+ vrf member CBT
+ ip address 10.20.20.1/24
+ fabric forwarding mode anycast-gateway
+!
+interface Vlan333
+ no shutdown
+ vrf member CBT
+ ip forward
+!
+interface Ethernet1/2
+ switchport access vlan 10
+!
+interface Ethernet1/3
+ switchport access vlan 20
+!
+router bgp 65000
+ vrf CBT
+   address-family ipv4 unicast
+     redistribute direct route-map PERMIT_ALL
+!

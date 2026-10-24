@@ -1,0 +1,83 @@
+! =====================================================================
+! SECTION 2: EVPN CONTROL PLANE (MP-BGP) CONFIGURATIONS
+! Topology: Spine-Leaf Architecture (EVE-NG)
+! =====================================================================
+
+
+! =====================================================================
+! DEVICE: CS1 (Core / Spine Router - Route Reflector)
+! =====================================================================
+
+router bgp 65000
+ bgp log-neighbor-changes
+ neighbor 10.0.0.2 remote-as 65000
+ neighbor 10.0.0.6 remote-as 65000
+ !
+ address-family ipv4
+  neighbor 10.0.0.2 activate
+  neighbor 10.0.0.2 route-reflector-client
+  neighbor 10.0.0.6 activate
+  neighbor 10.0.0.6 route-reflector-client
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  neighbor 10.0.0.2 activate
+  neighbor 10.0.0.2 send-community both
+  neighbor 10.0.0.2 route-reflector-client
+  neighbor 10.0.0.6 activate
+  neighbor 10.0.0.6 send-community both
+  neighbor 10.0.0.6 route-reflector-client
+ exit-address-family
+!
+
+
+! =====================================================================
+! DEVICE: 9K1 (Leaf 1 - EVPN BGP & VNI RD/RT Setup)
+! =====================================================================
+
+feature bgp
+!
+router bgp 65000
+ address-family l2vpn evpn
+  neighbor 10.0.0.1
+   remote-as 65000
+   address-family ipv4 unicast
+   address-family l2vpn evpn
+     send-community extended
+!
+evpn
+ vni 100000 l2
+   rd auto
+   route-target import auto
+   route-target export auto
+ vni 200000 l2
+   rd auto
+   route-target import auto
+   route-target export auto
+!
+
+
+! =====================================================================
+! DEVICE: 9K-2 (Leaf 2 - EVPN BGP & VNI RD/RT Setup)
+! =====================================================================
+
+feature bgp
+!
+router bgp 65000
+ address-family l2vpn evpn
+  neighbor 10.0.0.5
+   remote-as 65000
+   address-family ipv4 unicast
+   address-family l2vpn evpn
+     send-community extended
+!
+evpn
+ vni 100000 l2
+   rd auto
+   route-target import auto
+   route-target export auto
+ vni 200000 l2
+   rd auto
+   route-target import auto
+   route-target export auto
+!
